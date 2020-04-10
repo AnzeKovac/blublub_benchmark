@@ -1,25 +1,24 @@
 
-import {Element, api, track} from 'fmwrk';
+import {Element, api} from 'fmwrk';
 import init from 'asyncPageReferenceGenerator';
 import {Service} from './service';
 
 export default class ServiceConsumer extends Element {
-    @track loader = false;
-    @api recordId;
+    @api itemId;
     service;
 
     connectedCallback() {
         this.service = new Service(this);
-        this.service.controllSpinner = true;
-        this.navigateToRelatedRecord();
+        this.service.controllLoading = true;
+        this.generateRedirect();
     }
 
-    async navigateToRelatedRecord() {
+    async generateRedirect() {
         try {
-            let pageReference = (await this.service.apex(init, {recordId: this.recordId})).pageReference;
-            if(pageReference){
-                pageReference.attributes = pageReference.referenceAttributes;
-                this[NavigationMixin.Navigate](pageReference, true)
+            let redirectReference = (await this.service.apex(init, {itemId: this.itemId})).redirectReference;
+            if(redirectReference){
+                redirectReference.attributes = redirectReference.referenceAttributes;
+                this[NavigationMixin.Navigate](redirectReference, true)
             }
         } catch (e) {
             this.service.showToast('',e,'error');

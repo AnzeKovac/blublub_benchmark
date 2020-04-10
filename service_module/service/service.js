@@ -13,7 +13,7 @@ class Service {
         return apexCallout.execute(this.context, method, params);
     }
 
-    showToast(title, message, type) {
+    showNotification(title, message, type) {
         new Notification().toast(this.context, title, message, type);
     }
 
